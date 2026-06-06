@@ -21,32 +21,32 @@ This knowledge is valuable because official university pages usually only show f
 <!-- List your specific sources: URLs, subreddit names, forum threads, or file descriptions.
      Aim for at least 10 sources that together cover different subtopics or perspectives within your domain. -->
 
-| # | Source | Description | URL or location |
-|---|--------|-------------|-----------------|
- 1   Rate My Professors	Anthony Souza professor reviews	data/raw/    anthony_souza_rmp.docx
-2	Rate My Professors	Duc Ta professor reviews	data/raw/duc_ta_rmp.docx
-3	Rate My Professors	Jose Ortiz-Costa professor reviews	data/raw/jose_ortiz_costa_rmp.docx
-4	Rate My Professors	Matt Pico professor reviews	data/raw/Matt_pico_rmp.docx
-5	Rate My Professors	Robert Bierman professor reviews	data/raw/robert_bierman_rmp.docx
-6	Reddit r/SFSU	Student discussion about best CS professors	data/raw/reddit_best_cs_professors.docx
-7	Reddit r/SFSU	Student discussion about CS elective requirements	data/raw/reddit_cs_elective_requirements.docx
-8	Reddit r/SFSU	Student discussion about the SFSU CS program	data/raw/reddit_cs_program_sfsu.docx
-9	Reddit r/SFSU	Student discussion about CSC 415 professor recommendations	data/raw/reddit_csc415_professor_recommendations.docx
-10	Reddit r/SFSU	Student discussion about easy classes at SFSU	data/raw/reddit_easy_classes_sfsu.docx| | |
+| #     | Source                |    Description             |       URL or location          |
+|-------|-----------------------|----------------------------|-----------------|
+     1    Rate My Professors | Anthony Souza professor reviews | data/raw/anthony_souza_rmp.docx
+     2	Rate My Professors | Duc Ta professor reviews    |  data/raw/duc_ta_rmp.docx
+     3	Rate My Professors | Jose Ortiz-Costa professor reviews | 	data/raw/jose_ortiz_costa_rmp.docx
+     4	Rate My Professors | Matt Pico professor reviews |  data/raw/Matt_pico_rmp.docx
+     5	Rate My Professors | Robert Bierman professor reviews |  data/raw/robert_bierman_rmp.docx
+     6	Reddit r/SFSU | Student discussion about best CS professors	|  data/raw/reddit_best_cs_professors.docx
+     7	Reddit r/SFSU | Student discussion about CS elective requirements |	data/raw/reddit_cs_elective_requirements.docx
+     8	Reddit r/SFSU | Student discussion about the SFSU CS program |	data/raw/reddit_cs_program_sfsu.docx
+     9	Reddit r/SFSU | Student discussion about CSC 415 professor recommendations |	data/raw/           reddit_csc415_professor_recommendations.docx
+     10	Reddit r/SFSU | Student discussion about easy classes at SFSU | 	data/raw/reddit_easy_classes_sfsu.docx
 
 
 ---
 Chunking Strategy
 
-Chunk size: 500 characters
+Chunk size: 350 characters
 
-Overlap: 100 characters
+Overlap: 75 characters
 
 Reasoning:
 
-My dataset mostly contains short student reviews, Reddit comments, and summarized discussion posts. These documents are not long academic articles, so very large chunks would likely mix unrelated reviews together. A 500-character chunk should usually capture one complete student opinion or one small group of related sentences.
+My dataset mostly contains short student reviews, Reddit comments, and summarized discussion posts. These documents are not long academic articles, so very large chunks would likely mix unrelated reviews together. A 350-character chunk should usually capture one complete student opinion or one small group of related sentences.
 
-The 100-character overlap helps preserve context when an important statement falls near the boundary between two chunks. For example, a comment might mention a professor in one sentence and then describe the workload in the next sentence. Overlap makes it more likely that both pieces of information stay available during retrieval.
+The 75-character overlap helps preserve context when an important statement falls near the boundary between two chunks. For example, a comment might mention a professor in one sentence and then describe the workload in the next sentence. Overlap makes it more likely that both pieces of information stay available during retrieval.
 
 If chunks are too small, the system may retrieve incomplete opinions without enough context. If chunks are too large, the system may retrieve irrelevant details about other professors, courses, or comments.
 
@@ -90,7 +90,6 @@ The system should retrieve professor review documents and the Reddit best CS pro
 3. Retrieval may return the wrong professor or course if two documents use similar language about difficulty, workload, or grading.
 4. Source attribution may be challenging if chunks lose metadata about which document they came from. I need to preserve filename/source information for each chunk.
 
-
 ---
 
 ## Architecture
@@ -103,33 +102,34 @@ The system should retrieve professor review documents and the Reddit best CS pro
                     Source Documents
                     (10 .docx files from Rate My Professors + Reddit)
                          |
-                         
+                         |
                     Document Ingestion
                     Tool: python-docx
                     Input: data/raw/*.docx
                     Output: cleaned document text + source filename metadata
                          |
-                         
+                         |
                     Chunking
                     Strategy: 500-character chunks with 100-character overlap
                     Output: smaller text chunks with source metadata
                          |
-                         
+                         |
                     Embedding + Vector Store
                     Embedding Model: sentence-transformers/all-MiniLM-L6-v2
                     Vector Database: ChromaDB
                     Output: searchable vector collection
                          |
-                         
+                         |
                     Retrieval
                     Method: semantic similarity search
                     Top-k: 4 chunks per query
                     Output: most relevant chunks + citations
                          |
-                         
+                         |
                     Generation
                     LLM: Groq llama-3.3-70b-versatile
                     Output: grounded answer using only retrieved context
+
 ---
 
 ## AI Tool Plan
